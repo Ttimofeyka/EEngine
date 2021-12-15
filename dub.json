@@ -1,0 +1,13 @@
+{
+	"authors": [
+		"Ttimofeyka"
+	],
+	"copyright": "Copyright © 2021, Ttimofeyka",
+	"dependencies": {
+		"derelict-sfml2": "~>3.0.2",
+		"derelict-gl3": "~>1.0.0"
+	},
+	"description": "A minimal D application.",
+	"license": "proprietary",
+	"name": "eengine"
+}
