@@ -11,11 +11,9 @@ void main() {
 
 	Window window = new Window(800,600,"Hello!");
 	window.setFramerateLimit(60);
-	Scene main = new Scene();
 
 	while(window.isOpen()) {
 		while(window.pollEvent()) {
-			setup_keys(window.getEvent());
 			if(window.getEvent.have_EventType(EventType.closed)) {
 				window.close();
 			}
@@ -23,7 +21,6 @@ void main() {
 		
 
 		window.clear(Color.black);
-		window.drawScene(main);
 		window.display();
 	}
 }
