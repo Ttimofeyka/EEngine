@@ -4,11 +4,7 @@ public import eload;
 public import window;
 public import graphics;
 public import events;
-import std.stdio : writeln;
 import derelict.sfml2.window;
-import std.conv : to;
-
-static float speed = 1.75;
 
 void main() {
 	loadLibraries();
