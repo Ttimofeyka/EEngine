@@ -30,13 +30,22 @@ class IntRect {
     }
 }
 
-class Rectangle {
+class Drawable {
+    private float x;
+    private float y;
+
+    sfVector2f getPos() {
+        return sfVector2f(this.x,this.y);
+    }
+    sfVector2i getIPos() {
+        return sfVector2i(cast(int)this.x,cast(int)this.y);
+    }
+}
+
+class Rectangle : Drawable {
     private sfRectangleShape* shape;
-    private float x; private float y;
     private float width; private float height;
     private sfColor color;
-    private Scene scene;
-    private int numinscene=-1;
 
     this(float x, float y, float width, float height) {
         this.x=x; this.y=y; this.width=width; this.height=height;
@@ -48,30 +57,16 @@ class Rectangle {
     void setPos(float x, float y) {
         this.x=x; this.y=y;
         sfRectangleShape_setPosition(this.shape,sfVector2f(this.x,this.y));
-        if(numinscene != -1) {
-            this.scene.setRect(this,numinscene);
-        }
     }
 
     void setSize(float width, float height) {
         this.width=width; this.height=height;
         sfRectangleShape_setSize(this.shape,sfVector2f(this.width,this.height));
-        if(numinscene != -1) {
-            this.scene.setRect(this,numinscene);
-        }
     }
 
     void setColor(sfColor color) {
         this.color=color;
         sfRectangleShape_setFillColor(this.shape,this.color);
-        if(numinscene != -1) {
-            this.scene.setRect(this,numinscene);
-        }
-    }
-
-    void setScene(Scene scene) {
-        this.scene=scene;
-        numinscene=scene.addRect(this);
     }
 
     void destroy() {
@@ -92,13 +87,6 @@ class Rectangle {
     float getRotation() {
         return sfRectangleShape_getRotation(this.shape);
     }
-
-    sfVector2f getPos() {
-        return sfVector2f(this.x,this.y);
-    }
-    sfVector2i getIPos() {
-        return sfVector2i(cast(int)this.x,cast(int)this.y);
-    }
     sfVector2f getSize() {
         return sfVector2f(this.width,this.height);
     }
@@ -113,13 +101,10 @@ class Rectangle {
     sfRectangleShape* getRS() {return this.shape;}
 }
 
-class Circle {
+class Circle : Drawable {
     private sfCircleShape* shape;
     private float size;
-    private float x; private float y;
     private sfColor color;
-    private Scene scene;
-    private int numinscene=-1;
 
     this(float x, float y, float size) {
         this.size=size; this.x=x; this.y=y;
@@ -131,30 +116,16 @@ class Circle {
     void setPos(float x, float y) {
         this.x=x; this.y=y;
         sfCircleShape_setPosition(this.shape,sfVector2f(this.x,this.y));
-        if(numinscene != -1) {
-            this.scene.setCircle(this,numinscene);
-        }
     }
 
     void setSize(float size) {
         this.size=size;
         sfCircleShape_setRadius(this.shape,this.size);
-        if(numinscene != -1) {
-            this.scene.setCircle(this,numinscene);
-        }
     }
 
     void setColor(sfColor color) {
         this.color=color;
         sfCircleShape_setFillColor(this.shape,this.color);
-        if(numinscene != -1) {
-            this.scene.setCircle(this,numinscene);
-        }
-    }
-
-    void setScene(Scene scene) {
-        this.scene=scene;
-        numinscene=scene.addCircle(this);
     }
 
     void destroy() {
@@ -164,13 +135,6 @@ class Circle {
     void setOutline(float size, sfColor color) {
         sfCircleShape_setOutlineThickness(this.shape,size);
         sfCircleShape_setOutlineColor(this.shape,color);
-    }
-
-    sfVector2f getPos() {
-        return sfVector2f(this.x,this.y);
-    }
-    sfVector2i getIPos() {
-        return sfVector2i(cast(int)this.x,cast(int)this.y);
     }
     float getSize() {
         return this.size;
@@ -182,40 +146,35 @@ class Circle {
     sfCircleShape* getCS() {return this.shape;}
 }
 
-class Scene {
-    private Rectangle[int] rects;
-    private int[Rectangle] rects2;
-    private int irects;
+class Texture {
+    private string dir;
+    private sfTexture* texture;
 
-    private Circle[int] circles;
-    private int[Circle] circles2;
-    private int icircles;
-    
-    this() {
-        this.irects=0;
-        this.icircles=0;
-    }
-    int addRect(Rectangle rect) {
-        this.rects[this.irects]=rect;
-        this.rects2[rect]=this.irects;
-        this.irects+=1;
-        return this.irects-1;
-    }
-    void setRect(Rectangle rect, int num) {
-        this.rects[num]=rect;
-        this.rects2[rect]=num;
-    }
-    int addCircle(Circle circle) {
-        this.circles[this.icircles]=circle;
-        this.circles2[circle]=this.icircles;
-        this.icircles+=1;
-        return this.icircles-1;
-    }
-    void setCircle(Circle circle, int num) {
-        this.circles[num]=circle;
-        this.circles2[circle]=num;
+    this(string dir) {
+        this.dir=dir;
+        this.texture=sfTexture_createFromFile(this.dir.ptr,null);
     }
 
-    Rectangle[int] getRects() {return this.rects;}
-    Circle[int] getCircles() {return this.circles;}
+    sfTexture* getSfT() {return this.texture;}
+}
+
+class Sprite : Drawable {
+    private sfSprite* sprite;
+    private Texture tex;
+
+    this(Texture tex) {
+        this.sprite = sfSprite_create();
+        this.tex=tex;
+        sfSprite_setTexture(this.sprite,this.tex.getSfT(),sfTrue);
+    }
+    void reload(Texture tex) {
+        this.tex=tex;
+        sfSprite_setTexture(this.sprite,this.tex.getSfT(),sfTrue);
+    }
+    void setPos(float x, float y) {
+        this.x=x; this.y=y;
+        sfSprite_setPosition(this.sprite,sfVector2f(this.x,this.y));
+    }
+    Texture getTexture() {return this.tex;}
+    sfSprite* getSfS() {return this.sprite;}
 }

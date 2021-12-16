@@ -21,6 +21,8 @@ static bool keyA=false;
 static bool keyD=false;
 static bool keyLeft=false;
 static bool keyRight=false;
+static bool keyUp=false;
+static bool keyDown=false;
 
 void setup_keys(Event ev) {
     if(ev.have_EventType(EventType.keyPressed)) {
@@ -30,6 +32,8 @@ void setup_keys(Event ev) {
         else if(ev.getKeyCode()==sfKeyD) keyD=true;
         else if(ev.getKeyCode()==sfKeyLeft) keyLeft=true;
         else if(ev.getKeyCode()==sfKeyRight) keyRight=true;
+        else if(ev.getKeyCode()==sfKeyUp) keyUp=true;
+        else if(ev.getKeyCode()==sfKeyDown) keyDown=true;
     }
     else if(ev.have_EventType(EventType.keyReleased)) {
         if(ev.getKeyCode()==sfKeyW) keyW=false;
@@ -38,6 +42,8 @@ void setup_keys(Event ev) {
         else if(ev.getKeyCode()==sfKeyD) keyD=false;
         else if(ev.getKeyCode()==sfKeyLeft) keyLeft=false;
         else if(ev.getKeyCode()==sfKeyRight) keyRight=false;
+        else if(ev.getKeyCode()==sfKeyUp) keyUp=false;
+        else if(ev.getKeyCode()==sfKeyDown) keyDown=false;
     }
 }
 

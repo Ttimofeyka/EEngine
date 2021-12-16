@@ -39,34 +39,6 @@ float getDistance(float x1, float y1, float x2, float y2) {
     return sqrt(x1x2+y1y2);
 }
 
-bool coordXInRect(float x, Rectangle rect) {
-    float left_up_x = rect.getPos().x;
-    float right_up_x = left_up_x+rect.getSize().x;
-    if(x>=left_up_x&&x<=right_up_x) return true;
-    return false;
-}
-
-bool coordYInRect(float y, Rectangle rect) {
-    float up_y = rect.getPos().y;
-    float down_y = up_y+rect.getSize().y;
-    if(y>=up_y&&y<=down_y) return true;
-    return false;
-}
-
-bool coordsXYInRect(float x, float y, Rectangle rect) {
-    if(coordXInRect(x,rect)&&coordYInRect(y,rect)) return true;
-    return false;
-}
-
-bool coordsXYInCircle(float x, float y, Circle circle) {
-    float up_y=circle.getPos().y;
-    float down_y=circle.getPos().y+up_y;
-    float left_up_x = circle.getPos().x;
-    float right_up_x = left_up_x+circle.getSize()/2;
-    if(y>=up_y&&y<=down_y&&x>=left_up_x&&x<=right_up_x) return true;
-    return false;
-}
-
 class Window {
     private sfRenderWindow* window;
     private char* name;
@@ -108,15 +80,8 @@ class Window {
     void drawCircle(Circle circle) {
         sfRenderWindow_drawCircleShape(this.window,circle.getCS(),null);
     }
-    void drawScene(Scene scene) {
-        Rectangle[int] rects=scene.getRects();
-        Circle[int] circles=scene.getCircles();
-        for(int i=0; i<rects.length; i++) {
-            drawRect(rects[i]);
-        }
-        for(int i=0; i<circles.length; i++) {
-            drawCircle(circles[i]);
-        }
+    void drawSprite(Sprite spr) {
+        sfRenderWindow_drawSprite(this.window,spr.getSfS(),null);
     }
 
     void setFramerateLimit(int fps) {
